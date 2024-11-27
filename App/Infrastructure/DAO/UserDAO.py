@@ -67,8 +67,8 @@ class UserDAO(IUserRepository):
                                            birthDate=str(row["birthdate"]),
                                            token=row["token"],
                                            status=row["status"],
-                                           dateCreated=row["date_create"],
-                                           dateUpdate=row["date_update"]
+                                           dateCreated=str(row["date_create"]),
+                                           dateUpdate=str(row["date_update"])
                                           )
         
         except DatabaseError as e :
@@ -83,7 +83,7 @@ class UserDAO(IUserRepository):
         
         finally:
             self.__db.return_connection(conn)   
-            self.__log.info("devolviendo conexion") 
+   
         
         return user    
     def addUser(self, user: UserEntity)->int:
@@ -165,7 +165,7 @@ class UserDAO(IUserRepository):
         
         finally:
             self.__db.return_connection(conn)   
-            self.__log.info("devolviendo conexion") 
+           
         
         return user
   
@@ -194,7 +194,7 @@ class UserDAO(IUserRepository):
            
                 res = user.id
                 conn.commit() 
-                self.__log.info("add user -> [OK]")
+                self.__log.info("update user -> [OK]")
            
             
         except IntegrityError as e :

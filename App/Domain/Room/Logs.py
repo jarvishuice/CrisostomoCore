@@ -3,6 +3,7 @@ import inspect
 import logging
 import configparser
 import os
+from configAPP import PATH_LOGS
 
 class Logs:
     """
@@ -25,7 +26,7 @@ class Logs:
         caller_class = inspect.stack()[2][3]
         # Configurar el logger
         logging.basicConfig(
-            filename=f"logs{datetime.date.today()}.log",
+            filename=f"{PATH_LOGS}\Logs{datetime.date.today()}.log",
             level="INFO",
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         )

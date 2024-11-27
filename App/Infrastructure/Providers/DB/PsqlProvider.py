@@ -1,5 +1,6 @@
 from psycopg2.pool import SimpleConnectionPool
 from Domain.Room.Logs import Logs
+from Domain.Room.configAPP import DB_CONN_STR_PRIMARY
 class PsqlProvider:
     """
     Clase Singleton para manejar una única conexión a PostgreSQL a través de un pool.
@@ -21,18 +22,12 @@ class PsqlProvider:
         """
 
         if PsqlProvider.__instance is None:
-            params = {
-                'host': 'localhost',  # Reemplaza con tu host
-                'database': 'crisostomo',  # Reemplaza con tu base de datos
-                'user': 'crisostomo',  # Reemplaza con tu usuario
-                'password': '123456789',  # Reemplaza con tu contraseña
-                'port': 5432  # Reemplaza si el puerto es diferente
-            }
+            params = DB_CONN_STR_PRIMARY
             PsqlProvider.__instance = PsqlProvider(params, max_connections)
         return PsqlProvider.__instance
 
     def __init__(self, params, max_connections):
-     #   self.log.info("iniciando el pool ")
+        self.log.info("init  pool conn  ")
         self.pool = SimpleConnectionPool(minconn=1,maxconn=100, **params)
 
     def return_connection(self, conn):
@@ -42,7 +37,7 @@ class PsqlProvider:
         Args:
             conn: La conexión a devolver.
         """
-        print("return conn  pool ")
+        self.log.info("return conn  pool ")
         self.pool.putconn(conn)
 
     def close_all_connections(self):
@@ -57,6 +52,7 @@ class PsqlProvider:
         Returns:
             Una conexión a la base de datos.
         """
+        self.log.info("get_connection")
 
         return self.pool.getconn()
 
