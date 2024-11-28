@@ -12,7 +12,7 @@ service: UserService = UserService(dao)
 
 
 @UserController.get("/all")
-def getAll(request: Request):
+async def getAll(request: Request):
     try:
         logs.info(f"call {request.client.host} ->  getAll() ")
         return service.getAllUsers()
@@ -21,7 +21,7 @@ def getAll(request: Request):
 
 
 @UserController.get("/byId")
-def getById(request: Request, userId: int):
+async def getById(request: Request, userId: int):
     try:
         logs.info(f"call {request.client.host} ->  getById({userId}) ")
         return service.getUserById(userId)
@@ -30,7 +30,7 @@ def getById(request: Request, userId: int):
 
 
 @UserController.get("/search")
-def searchUser(request: Request, param):
+async def searchUser(request: Request, param):
     logs.info(f"call {request.client.host} -> searchUser({param})")
     try:
         return service.getUserByParam(param)
