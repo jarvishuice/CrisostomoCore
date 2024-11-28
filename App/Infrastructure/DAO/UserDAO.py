@@ -33,7 +33,9 @@ class UserDAO(IUserRepository):
                                            username=row["username"],
                                            birthDate=str(row["birthdate"]),
                                            token=row["token"],
-                                           status=row["status"], ))
+                                           status=row["status"],
+                                           dateCreated=str(row["date_create"]),
+                                           dateUpdate=str(row["date_update"] )))
         except DatabaseError as e :
             self.__log.error(f"Error de operacion en la base de datos en la base de datos ->{e} ")
             raise ExeptionDAO(f"Actualmente tenemos problema para procesar tu solicitud"+
@@ -151,8 +153,8 @@ class UserDAO(IUserRepository):
                                            birthDate=str(row["birthdate"]),
                                            token=row["token"],
                                            status=row["status"],
-                                           dateCreated=row["date_create"],
-                                           dateUpdate=row["date_update"]  )
+                                           dateCreated=str(row["date_create"]),
+                                           dateUpdate=str(row["date_update"])  )
         except DatabaseError as e :
             self.__log.warning(f"Error de operacion en la base de datos en la base de datos ->{e} ")
             raise ExeptionDAO(f"Actualmente tenemos problema para procesar tu solicitud"+

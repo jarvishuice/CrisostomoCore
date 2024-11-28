@@ -1,9 +1,7 @@
+from Domain.GlobalValues import GlobalValues
 import datetime
-import inspect
 import logging
-import configparser
-import os
-from configAPP import PATH_LOGS
+
 
 class Logs:
     """
@@ -18,18 +16,15 @@ class Logs:
 
   
     def __init__(self,name:str):
-        # Cargar la configuración desde el archivo .conf
-        config = configparser.ConfigParser()
-        #print("esta es la ruta"+os.path.join(os.path.dirname(__file__), 'configApp.conf'))
-        #config_path = os.path.join(os.path.dirname(__file__), 'configApp.conf')  # Ajusta la ruta
-       # config.read(config_path)
-        caller_class = inspect.stack()[2][3]
+        
+       
         # Configurar el logger
         logging.basicConfig(
-            filename=f"{PATH_LOGS}\Logs{datetime.date.today()}.log",
+            filename=f"{str(GlobalValues().getPathLogs)}Logs{datetime.date.today()}.log",
             level="INFO",
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         )
+        print(f"path:-> {str(GlobalValues().getPathLogs)}Logs{datetime.date.today()}.log")
 
         self.logger = logging.getLogger(name)
 

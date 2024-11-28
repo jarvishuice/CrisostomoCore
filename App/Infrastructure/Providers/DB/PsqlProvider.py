@@ -1,6 +1,6 @@
 from psycopg2.pool import SimpleConnectionPool
 from Domain.Room.Logs import Logs
-from Domain.Room.configAPP import DB_CONN_STR_PRIMARY
+from Domain.GlobalValues import GlobalValues
 class PsqlProvider:
     """
     Clase Singleton para manejar una única conexión a PostgreSQL a través de un pool.
@@ -22,7 +22,7 @@ class PsqlProvider:
         """
 
         if PsqlProvider.__instance is None:
-            params = DB_CONN_STR_PRIMARY
+            params = GlobalValues().getDbConnStrPrimary
             PsqlProvider.__instance = PsqlProvider(params, max_connections)
         return PsqlProvider.__instance
 
