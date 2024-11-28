@@ -5,6 +5,7 @@ from Infrastructure.Providers.DB.PsqlProvider import PsqlProvider
 from Domain.Repository.IUserRepository import IUserRepository
 from psycopg2.extras import RealDictCursor
 from psycopg2 import IntegrityError,DatabaseError
+from Domain.GlobalValues import GlobalValues
 class UserDAO(IUserRepository):
     """
     Clase para interactuar con la base de datos de usuarios.
@@ -38,9 +39,7 @@ class UserDAO(IUserRepository):
                                            dateUpdate=str(row["date_update"] )))
         except DatabaseError as e :
             self.__log.error(f"Error de operacion en la base de datos en la base de datos ->{e} ")
-            raise ExeptionDAO(f"Actualmente tenemos problema para procesar tu solicitud"+
-                               "intente en un lapso de 5 minutos si el problema persiste"+
-                               "comuinquese con el aadministrador del sistema  ")
+            raise ExeptionDAO(GlobalValues().getMsgDbError)
         except Exception as e:
             self.__log.error(e)
             raise ExeptionDAO(e)
@@ -74,10 +73,8 @@ class UserDAO(IUserRepository):
                                           )
         
         except DatabaseError as e :
-            self.__log.warning(f"Error de operacion en la base de datos en la base de datos ->{e} ")
-            raise ExeptionDAO(f"Actualmente tenemos problema para procesar tu solicitud"+
-                               "intente en un lapso de 5 minutos si el problema persiste"+
-                               "comuinquese con el aadministrador del sistema  ")
+            self.__log.error(f"Error de operacion en la base de datos en la base de datos ->{e} ")
+            raise ExeptionDAO(GlobalValues().getMsgDbError)
         except Exception as e:
             self.__log.error(e)
             raise ExeptionDAO(e)
@@ -118,14 +115,10 @@ class UserDAO(IUserRepository):
             
         except IntegrityError as e :
             self.__log.error(f"Error de integridad en la base de datos ->{e} ")
-            raise ExeptionDAO(f"Error esta ingresando datos cuyos valores ya fueron "+ 
-                              f"registrados por favor reviselos y si el problema persiste "+
-                              f"comuniquese con el administrador del sistema ")
+            raise ExeptionDAO(GlobalValues().getMsgDbIntErrors)
         except DatabaseError as e :
             self.__log.error(f"Error de operacion en la base de datos en la base de datos ->{e} ")
-            raise ExeptionDAO(f"Actualmente tenemos problema para procesar tu solicitud"+
-                               "intente en un lapso de 5 minutos si el problema persiste"+
-                               "comuinquese con el aadministrador del sistema  ")
+            raise ExeptionDAO(GlobalValues().getMsgDbError)
         except Exception as e:
             self.__log.error(e)
             raise ExeptionDAO(e)
@@ -156,10 +149,8 @@ class UserDAO(IUserRepository):
                                            dateCreated=str(row["date_create"]),
                                            dateUpdate=str(row["date_update"])  )
         except DatabaseError as e :
-            self.__log.warning(f"Error de operacion en la base de datos en la base de datos ->{e} ")
-            raise ExeptionDAO(f"Actualmente tenemos problema para procesar tu solicitud"+
-                               "intente en un lapso de 5 minutos si el problema persiste"+
-                               "comuinquese con el aadministrador del sistema  ")
+            self.__log.error(f"Error de operacion en la base de datos en la base de datos ->{e} ")
+            raise ExeptionDAO(GlobalValues().getMsgDbError)
         except Exception as e:
             self.__log.warning(e)
             raise ExeptionDAO(e)
@@ -192,23 +183,16 @@ class UserDAO(IUserRepository):
                 user.status,
                 user.id
                 ))
-                
-           
                 res = user.id
                 conn.commit() 
                 self.__log.info("update user -> [OK]")
-           
-            
+               
         except IntegrityError as e :
             self.__log.error(f"Error de integridad en la base de datos ->{e} ")
-            raise ExeptionDAO(f"Error esta ingresando datos cuyos valores ya fueron "+ 
-                              f"registrados por favor reviselos y si el problema persiste "+
-                              f"comuniquese con el administrador del sistema ")
+            raise ExeptionDAO(GlobalValues().getMsgDbIntErrors)
         except DatabaseError as e :
             self.__log.error(f"Error de operacion en la base de datos en la base de datos ->{e} ")
-            raise ExeptionDAO(f"Actualmente tenemos problema para procesar tu solicitud"+
-                               "intente en un lapso de 5 minutos si el problema persiste"+
-                               "comuinquese con el aadministrador del sistema  ")
+            raise ExeptionDAO(GlobalValues().getMsgDbError)
         except Exception as e:
             self.__log.error(e)
             raise ExeptionDAO(e)

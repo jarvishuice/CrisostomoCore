@@ -36,10 +36,15 @@ class GlobalValues:
     def getDBEngine(self)->str:
         return "postgresql"
     @property
-    def getMsgDbErro(self)->str:
+    def getMsgDbError(self)->str:
         msg=f"""Actualmente tenemos problema para procesar tu solicitud 
             intente en un lapso de 5 minutos si el problema persiste 
             comuinquese con el aadministrador del sistema  """
         return msg
+    @property
+    def getMsgDbIntErrors(self)-> str:
+        return """Error esta ingresando datos cuyos valores ya fueron 
+                  registrados por favor reviselos y si el problema persiste 
+                  comuniquese con el administrador del sistema"""
     
 
