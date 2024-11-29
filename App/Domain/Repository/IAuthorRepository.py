@@ -17,5 +17,5 @@ class IAuthorRepository(ABC):
     def searchAuthor(self,param:str)->list[AuthorEntity] :
         ...  
     @abstractmethod
-    def addAuthor(self,author:AuthorEntity)->AuthorEntity:
+    def addAuthor(self,author:AuthorEntity)->int:
         ...

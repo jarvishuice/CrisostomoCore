@@ -11,7 +11,7 @@ class AuthorService:
         self.repository = repository
     
     @property
-    def getAllAutors(self) -> list[AuthorEntity]:
+    async  def getAllAutors(self) -> list[AuthorEntity]:
         res = []
         try:
             res = self.repository.getAuthors
@@ -26,3 +26,18 @@ class AuthorService:
             return res
         except ExeptionDAO as e :
             raise   
+    async def createAuthor(self,author:AuthorEntity)->AuthorEntity:
+        res:AuthorEntity = None
+        try:
+            id:int= self.repository.addAuthor(author)
+            res = await self.getAuthorById(id)
+            return res
+        except ExeptionDAO as e :
+            raise 
+    async def search(self,param:str)-> list[AuthorEntity]:
+        res=[]
+        try:
+            res =  self.repository.searchAuthor(param.upper())
+            return res
+        except ExeptionDAO as e :
+            raise 

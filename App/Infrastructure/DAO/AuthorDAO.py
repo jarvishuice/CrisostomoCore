@@ -66,7 +66,60 @@ class AuthorDAO(IAuthorRepository):
         return res  
 
     def searchAuthor(self,param:str)->list[AuthorEntity] :
-        ...  
+        res = []
+        conn = self.__db.get_connection()
+        query= "select * from author where name like  %s ;"
+        try:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute(query,(f"%{param}%",))
+                rows = cur.fetchall()
+                if len(rows) > 0:
 
-    def addAuthor(self,author:AuthorEntity)->AuthorEntity:
-        ...    
+                    for row in rows:
+                        res.append(AuthorEntity(id=row["id"],
+                                        name=row["name"],
+                                    ))
+                    self.__log.info(f"search  Author #{param} ->[OK] ->[{res.__len__()}] Authors ")
+                else:
+                    self.__log.info(f"search  Author #{param} ->[Not Found]")    
+        except DatabaseError as e :
+            self.__log.error(f"Error de operacion en la base de datos en la base de datos ->{e} ")
+            raise ExeptionDAO(GlobalValues().getMsgDbError)
+        except Exception as e:
+            self.__log.error(e)
+            raise ExeptionDAO(e)
+        finally:
+            self.__db.return_connection(conn)
+        return res
+    def addAuthor(self,author:AuthorEntity)->int:
+        new_id = None
+        conn = self.__db.get_connection()
+        try:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                query = """
+                    INSERT INTO public.author ( name) 
+                    VALUES (%s)
+                    RETURNING id
+                 """
+                cur.execute(query, (
+                author.name.upper(),
+                ))
+                
+           
+                new_id = cur.fetchone()['id']
+                conn.commit() 
+                self.__log.info(f"add author -> [OK] -> #[{new_id}]")
+            return new_id
+            
+        except IntegrityError as e :
+            self.__log.error(f"Error de integridad en la base de datos ->{e} ")
+            raise ExeptionDAO(GlobalValues().getMsgDbIntErrors)
+        except DatabaseError as e :
+            self.__log.error(f"Error de operacion en la base de datos en la base de datos ->{e} ")
+            raise ExeptionDAO(GlobalValues().getMsgDbError)
+        except Exception as e:
+            self.__log.error(e)
+            raise ExeptionDAO(e)
+        finally:
+            self.__db.return_connection(conn)
+        return new_id     
