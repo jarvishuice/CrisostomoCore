@@ -1,0 +1,72 @@
+from Domain.Entity.AuthorEntity import AuthorEntity
+from Infrastructure.Providers.DB.PsqlProvider import PsqlProvider
+from psycopg2.extras import RealDictCursor
+from psycopg2 import IntegrityError,DatabaseError
+from Domain.GlobalValues import GlobalValues
+from Domain.Exeptions.ExecptionDAO import ExeptionDAO
+from Domain.Room.Logs import Logs
+from Domain.Repository.IAuthorRepository import IAuthorRepository
+class AuthorDAO(IAuthorRepository):
+    def __init__(self ):
+        self.__log = Logs(__name__)
+        self.__db:PsqlProvider = PsqlProvider.get_instance(100)
+    
+    @property
+    def getAuthors(self) -> list[AuthorEntity] :
+        res = []
+        conn = self.__db.get_connection()
+        query = "select * from author"
+        try:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute(query)
+                rows = cur.fetchall()
+                for row in rows:
+                    res.append(AuthorEntity(id=row["id"],
+                                            name=row["name"],
+                                           ))
+                self.__log.info(f"read all Authors ->[OK] ->[{res.__len__()}] authors")
+        except DatabaseError as e :
+            self.__log.error(f"Error de operacion en la base de datos en la base de datos ->{e} ")
+            raise ExeptionDAO(GlobalValues().getMsgDbError)
+        except Exception as e:
+            self.__log.error(e)
+            raise ExeptionDAO(e)
+        finally:
+            self.__db.return_connection(conn)   
+
+        return res  
+
+  
+    def getAuthorById(self , id:int) -> AuthorEntity:
+        res:AuthorEntity = None
+        conn = self.__db.get_connection()
+        query= "select * from author where id = %s"
+        try:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute(query,(id,))
+                rows = cur.fetchall()
+                if len(rows) > 0:
+
+                    for row in rows:
+                        res=AuthorEntity(id=row["id"],
+                                        name=row["name"],
+                                    )
+                    self.__log.info(f"read  Author #{id} ->[OK] ->[{res.name}] ")
+                else:
+                    self.__log.info(f"read  Author #{id} ->[Not Found]")    
+        except DatabaseError as e :
+            self.__log.error(f"Error de operacion en la base de datos en la base de datos ->{e} ")
+            raise ExeptionDAO(GlobalValues().getMsgDbError)
+        except Exception as e:
+            self.__log.error(e)
+            raise ExeptionDAO(e)
+        finally:
+            self.__db.return_connection(conn)   
+
+        return res  
+
+    def searchAuthor(self,param:str)->list[AuthorEntity] :
+        ...  
+
+    def addAuthor(self,author:AuthorEntity)->AuthorEntity:
+        ...    

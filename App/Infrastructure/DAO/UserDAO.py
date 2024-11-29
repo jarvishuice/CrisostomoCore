@@ -137,7 +137,7 @@ class UserDAO(IUserRepository):
                                 (param,param,param,param))
                 rows = cur.fetchall()
                 for row in rows:
-                    user=UserEntity(id=row["id"],
+                    user=UserEntity(       id=row["id"],
                                            name=row["name_primary"],
                                            lastname=row["last_name"],
                                            email=row["email"],

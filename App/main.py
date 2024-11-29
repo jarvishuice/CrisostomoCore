@@ -1,21 +1,29 @@
 from fastapi import FastAPI
 from API.Controllers.UserController import UserController
+from API.Controllers.AuthorController import AuthorController
 from Domain.GlobalValues import GlobalValues
+from Domain.Room.Logs import Logs
 import uvicorn
 
-from Domain.Room.Logs import Logs
 log = Logs(__name__)
-
 
 app = FastAPI()
 app.title = "CRISOSTO API"
 app.version = "1.0.0"
 log.info("init core")
 log.info("starting server")
-log.info(f"check path Logs ->[ok] -> {str(GlobalValues().getPathLogs)}")
-log.info(f"check engine Db -> [ok] -> {GlobalValues().getDBEngine}")
+log.info(f"build map Controllers")
+
+
 # mapeo de controladores
+#=====================================================
+
 app.include_router(UserController, prefix="/API",)
+app.include_router(AuthorController, prefix="/API",)
+
+#=====================================================
+
+log.info(f" builder controller Complete") 
 log.info(f"server Crisostomo started on " +
          f"http://{GlobalValues().getIPServer}" +
          f":{GlobalValues().getPortServer}")
