@@ -14,3 +14,7 @@ class IEditorialRepository(ABC):
     @abstractmethod
     def searchEditorial(self,param:str)->list[EditorialEntity] :
         ...   
+
+    @abstractmethod
+    def addEditorial(self, editorial: EditorialEntity) -> int:
+        ...
