@@ -46,5 +46,12 @@ class GlobalValues:
         return """Error esta ingresando datos cuyos valores ya fueron 
                   registrados por favor reviselos y si el problema persiste 
                   comuniquese con el administrador del sistema"""
-    
+    @property
+    def PathBooks(self):
+        path = None
+        if os.name == 'nt':
+            path = "C:\\CrisostomoCore\\Media\\Books"
+        else:
+            path = "/opt/CrisostomoCore/Media/Books"
+        return path
 

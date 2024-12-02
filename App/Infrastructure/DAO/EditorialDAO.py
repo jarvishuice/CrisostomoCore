@@ -25,8 +25,8 @@ class EditorialDAO(IEditorialRepository):
                     res.append(EditorialEntity(id=row["id"],
                                                name=row["name"]
                                               ))
-                self.__log.info(f"""read all Editorials ->
-                                [OK] ->[{res.__len__()}] editorials""")
+                self.__log.info(f"read all Editorials ->"+
+                                "[OK] ->[{res.__len__()}] editorials")
                 
         except DatabaseError as e :
             self.__log.error(f"Error de operacion en la base"+ 
