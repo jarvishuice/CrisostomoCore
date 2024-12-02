@@ -12,3 +12,13 @@ class CategoryService:
             return  self.repository.getBaseCategory
         except ExeptionDAO as  e :
             raise
+    async def getCategoryByParentId(self, parentId:int) -> list[CategoryEntity]:
+        try:
+            return  self.repository.getCategoriesByParentId(parentId)
+        except ExeptionDAO as  e :
+            raise
+    async def getCategoryById(self, id:int) -> CategoryEntity:
+        try:
+            return  self.repository.getCategoryById(id)
+        except ExeptionDAO as  e :
+            raise
