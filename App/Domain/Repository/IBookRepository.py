@@ -6,12 +6,21 @@ class IBookRepository(ABC):
     @abstractmethod
     def getAll() -> list[BookEntity]:
         ...
+
     @abstractmethod 
     def getBookById(id: int) -> BookEntity:
         ...
+
     @abstractmethod
     def searchBook(param:str) ->list[BookEntity]:
         ...
+    
     @abstractmethod
     def addBook(book:BookEntity) -> int:
         ...
+    
+    @abstractmethod
+    def filterByParam(param:str,value:int)->list[BookEntity]:
+        ...
+    
+ 
