@@ -21,7 +21,14 @@ class GlobalValues:
             path = "C:\\CrisostomoCore\\Logs\\"
         else:
             path = "/opt/CrisostomoCore/Logs/"
+
         return path
+    @property
+    def DirectoryChar(self):
+        if os.name == 'nt':
+            path = "\\"
+        else:
+            path = "/"
 
     @property
     def getIPServer(self):
