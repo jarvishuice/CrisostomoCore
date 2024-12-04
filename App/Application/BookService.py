@@ -9,11 +9,11 @@ import fitz
 
 class BookService:
     
-    #self.__SEPARATOR = "/" en linux  y en windows "\\"
+
     def __init__(self,repository:IBookRepository):
         self.repository = repository
         self.__log = Logs(__name__)
-        self.__SEPARATOR = GlobalValues().DirectoryChar
+      
     
     async def getBookById(self,id:int) -> BookEntity:
         try:
