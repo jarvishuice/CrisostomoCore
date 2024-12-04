@@ -4,7 +4,6 @@ from Domain.Repository.IBookRepository import IBookRepository
 from Domain.Room.Logs import Logs
 from Domain.GlobalValues import GlobalValues
 import time
-from pdf2image import convert_from_path
 import fitz 
 
 class BookService:
