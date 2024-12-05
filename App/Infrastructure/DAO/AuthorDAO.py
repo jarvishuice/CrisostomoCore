@@ -23,6 +23,7 @@ class AuthorDAO(IAuthorRepository):
                 for row in rows:
                     res.append(AuthorEntity(id=row["id"],
                                             name=row["name"],
+                                            description = row["description"],
                                            ))
                 self.__log.info(f"read all Authors ->[OK] ->[{res.__len__()}] authors")
         except DatabaseError as e :
@@ -50,6 +51,7 @@ class AuthorDAO(IAuthorRepository):
                     for row in rows:
                         res=AuthorEntity(id=row["id"],
                                         name=row["name"],
+                                        description = row["description"],
                                     )
                     self.__log.info(f"read  Author #{id} ->[OK] ->[{res.name}] ")
                 else:
@@ -77,8 +79,9 @@ class AuthorDAO(IAuthorRepository):
 
                     for row in rows:
                         res.append(AuthorEntity(id=row["id"],
-                                        name=row["name"],
-                                    ))
+                                                name = row["name"],
+                                                description = row["description"]
+                                                ))
                     self.__log.info(f"search  Author #{param} ->[OK] ->[{res.__len__()}] Authors ")
                 else:
                     self.__log.info(f"search  Author #{param} ->[Not Found]")    
@@ -92,17 +95,19 @@ class AuthorDAO(IAuthorRepository):
             self.__db.return_connection(conn)
         return res
     def addAuthor(self,author:AuthorEntity)->int:
+    
         new_id = None
         conn = self.__db.get_connection()
         try:
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 query = """
-                    INSERT INTO public.author ( name) 
-                    VALUES (%s)
+                    INSERT INTO public.author ( name, description) 
+                    VALUES (%s, %s)
                     RETURNING id
                  """
                 cur.execute(query, (
                 author.name.upper(),
+                author.description,
                 ))
                 
            
