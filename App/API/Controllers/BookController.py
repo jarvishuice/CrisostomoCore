@@ -1,9 +1,11 @@
 from fastapi import APIRouter, File, HTTPException, Request, UploadFile
+from fastapi.responses import FileResponse
 from Domain.Entity.BookEntity import BookEntity
 from Application.BookService import BookService
 from Infrastructure.DAO.BookDAO import BookDAO
 from Domain.Exeptions.ExecptionDAO import ExeptionDAO
 from Domain.Room.Logs import Logs
+import os
 
 BookController = APIRouter(prefix="/books", tags=["libros"])
 logs = Logs(__name__)
@@ -20,7 +22,8 @@ async def getBookById(request:Request,id:int):
     
 
 @BookController.post("/createBook")
-async def create_book(editorial:int,autor:int,title:str,category:int,category_base:int,userUpload:int,request:Request,pdf_file: UploadFile = File(...), ): #):  # Recibiendo el archivo PDF
+async def createBook(editorial:int,autor:int,title:str,category:int,category_base:int,userUpload:int,request:Request,pdf_file: UploadFile = File(...), ): #):  # Recibiendo el archivo PDF
+
     res:BookEntity = None
     logs.info(f"call {request.client.host} ->  createBook({title}) ")
     book:BookEntity = BookEntity(id = 0,
@@ -42,3 +45,11 @@ async def create_book(editorial:int,autor:int,title:str,category:int,category_ba
     except Exception as e:
           raise HTTPException(status_code=400, detail=f"Error al subir  el libro [{e}]")
     
+
+@BookController.get("/getImagePreview")
+async def getImagePreview(request:Request,idBook:int):
+    logs.info(f"call {request.client.host} ->  getImagePreview({id}) ")
+    imagePath =  await service.getPreviewImageByidBook(idBook)
+    if not os.path.exists(imagePath):
+        raise HTTPException(status_code=404, detail="Image not found")
+    return FileResponse(imagePath) 

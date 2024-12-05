@@ -48,3 +48,9 @@ class BookService:
             raise
         except Exception as e :
             raise
+
+
+    async def getPreviewImageByidBook(self,idBook:int)->str:
+        book:BookEntity =  await self.getBookById(idBook)
+        path = f"{GlobalValues().PathBooks}/{book.idCategory}/{book.code}.png"
+        return path
