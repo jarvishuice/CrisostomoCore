@@ -1,7 +1,7 @@
 # CRISOSTOMO API
 
 ## Descripción
-CRISOSTOMO es una API diseñada para gestionar libros, autores, editoriales y categorías. Utiliza FastAPI como framework web y PostgreSQL como base de datos. La API permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre libros, autores, editoriales y categorías, así como la búsqueda y filtrado de estos recursos.
+CRISOSTOMO es una API diseñada para gestionar libros, autores, editoriales y categorías. Utiliza FastAPI como framework web y PostgreSQL como base de datos. La API permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre libros, autores, editoriales y categorías, así como la búsqueda y filtrado de estos recursos. Esta aplicación está implementada siguiendo los principios de **Clean Architecture**. Este API es el núcleo de una biblioteca digital disenada e implementada eln la aldea universitaria de mision sucre Jose gil fortoul .
 
 ## Estructura del Proyecto
 El proyecto está organizado en varias carpetas:
@@ -10,8 +10,12 @@ El proyecto está organizado en varias carpetas:
 - **API**: Define los controladores que manejan las solicitudes HTTP.
 - **Domain**: Contiene las entidades y las interfaces de los repositorios.
 - **Infrastructure**: Implementa la conexión a la base de datos y los DAOs (Data Access Objects).
-- **Application**: Contiene la lógica de negocio y los servicios que interactúan con los DAOs.
+- **Application**: Contiene la implementación de la lógica de la aplicación y los servicios que interactúan con los DAOs.
 - **config**: Scripts de configuración y generación de directorios.
+
+## Requisitos
+- Python 3.12.4
+- PostgreSQL
 
 ## Instalación
 
@@ -77,7 +81,6 @@ Las contribuciones son bienvenidas. Si deseas contribuir, por favor sigue estos 
 3. Realiza tus cambios y haz commit (`git commit -m 'Añadir nueva característica'`).
 4. Haz push a la rama (`git push origin feature/nueva-caracteristica`).
 5. Abre un Pull Request.
-
 
 ## Contacto
 Para más información, puedes contactar al autor del proyecto a través de [jarvis.realg@gmail.com].
