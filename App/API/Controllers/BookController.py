@@ -20,6 +20,24 @@ async def getBookById(request:Request,id:int):
     except ExeptionDAO as e:
         raise HTTPException(status_code=400, detail=f"Error al obtener el libro [{e}]")
     
+@BookController.get("/getImagePreview")
+async def getImagePreview(request:Request,idBook:int):
+    logs.info(f"call {request.client.host} ->  getImagePreview({id}) ")
+    imagePath =  await service.getPreviewImageByidBook(idBook)
+    if not os.path.exists(imagePath):
+        raise HTTPException(status_code=404, detail="Image not found")
+    return FileResponse(imagePath) 
+
+
+@BookController.get("/filter")
+async def filter(request:Request,param:str,value:int):
+    logs.info(f"call {request.client.host} ->  filter({param},{value}) ")
+    try: 
+         res =  await service.filterBook(param,value)
+         return res
+    except ExeptionDAO as e:
+        raise HTTPException(status_code=400, detail=f"Error al filtrar el libro [{e}]")
+
 
 @BookController.post("/createBook")
 async def createBook(editorial:int,autor:int,title:str,category:int,category_base:int,userUpload:int,request:Request,pdf_file: UploadFile = File(...), ): #):  # Recibiendo el archivo PDF
@@ -46,10 +64,3 @@ async def createBook(editorial:int,autor:int,title:str,category:int,category_bas
           raise HTTPException(status_code=400, detail=f"Error al subir  el libro [{e}]")
     
 
-@BookController.get("/getImagePreview")
-async def getImagePreview(request:Request,idBook:int):
-    logs.info(f"call {request.client.host} ->  getImagePreview({id}) ")
-    imagePath =  await service.getPreviewImageByidBook(idBook)
-    if not os.path.exists(imagePath):
-        raise HTTPException(status_code=404, detail="Image not found")
-    return FileResponse(imagePath) 

@@ -1,3 +1,4 @@
+from Domain.Values.filterBookValues import FILTER_BOOK
 from Domain.Exeptions.ExecptionDAO import ExeptionDAO
 from Domain.Entity.BookEntity import BookEntity
 from Domain.Repository.IBookRepository import IBookRepository
@@ -54,3 +55,10 @@ class BookService:
         book:BookEntity =  await self.getBookById(idBook)
         path = f"{GlobalValues().PathBooks}/{book.idCategory}/{book.code}.png"
         return path
+    
+    async def filterBook(self,param:str,value:int) -> list[BookEntity]:
+        try:            
+                return  self.repository.filterByParam(param,value)
+         
+        except ExeptionDAO as  e :
+            raise

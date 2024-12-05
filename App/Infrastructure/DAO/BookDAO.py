@@ -1,3 +1,4 @@
+from Domain.Values.filterBookValues import FILTER_BOOK
 from Domain.Entity.BookEntity import BookEntity
 from Domain.Repository.IBookRepository import IBookRepository
 from Infrastructure.Providers.DB.PsqlProvider import PsqlProvider
@@ -168,6 +169,12 @@ class BookDAO(IBookRepository):
    
     
     def filterByParam(self,param:str,value:int)->list[BookEntity]:
+        if param not  in FILTER_BOOK:
+            self.__log.error(f"Error en el filtro [{param}]")
+            raise ExeptionDAO(f"ERROR EL FILTRO [{param}]"+ 
+                              "NO ES UN PARAMETRO VALIDO ")
+
+
         res = []  
         conn = self.__db.get_connection()
         query = f"select * from books b where {param} = %s order by b.title asc "
@@ -176,7 +183,7 @@ class BookDAO(IBookRepository):
                 cur.execute(query,(value,))
                 rows = cur.fetchall()
                 for row in rows:
-                    res = BookEntity( id = row["id"],
+                    res.append( BookEntity( id = row["id"],
                                       title = row["title"],
                                       idEditorial = row["editorial"],
                                       idAutor = row["autor"],
@@ -185,8 +192,7 @@ class BookDAO(IBookRepository):
                                       idUserUpload = row["user_upload"],
                                       dateCreated = str(row["date_create"]),
                                       code = row["code"],
-          
-                                              )
+                                              ))
                 self.__log.info(f"search  Book ->{param} ->"+
                                 f"[OK] ->[{res.__len__()}] books")
                 
