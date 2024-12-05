@@ -1,3 +1,4 @@
+from Domain.Entity.DownloadMediaEntity import DownloadMediaEntity
 from Domain.Values.filterBookValues import FILTER_BOOK
 from Domain.Exeptions.ExecptionDAO import ExeptionDAO
 from Domain.Entity.BookEntity import BookEntity
@@ -56,9 +57,23 @@ class BookService:
         path = f"{GlobalValues().PathBooks}/{book.idCategory}/{book.code}.png"
         return path
     
+
+    async def getPdfFile(self,idBook:int )->DownloadMediaEntity:
+        res:DownloadMediaEntity = None
+        try:
+            book:BookEntity =  await self.getBookById(idBook)
+            path = f"{GlobalValues().PathBooks}/{book.idCategory}/{book.code}.pdf"
+            res = DownloadMediaEntity(path=path,
+                                      name=book.title,
+                                      ext=".pdf"  )            
+            return res
+        except ExeptionDAO as  e :
+            raise
+
+
     async def filterBook(self,param:str,value:int) -> list[BookEntity]:
         try:            
-                return  self.repository.filterByParam(param,value)
-         
+            return  self.repository.filterByParam(param,value)
         except ExeptionDAO as  e :
+            
             raise

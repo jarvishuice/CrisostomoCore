@@ -20,13 +20,6 @@ async def getBookById(request:Request,id:int):
     except ExeptionDAO as e:
         raise HTTPException(status_code=400, detail=f"Error al obtener el libro [{e}]")
     
-@BookController.get("/getImagePreview")
-async def getImagePreview(request:Request,idBook:int):
-    logs.info(f"call {request.client.host} ->  getImagePreview({id}) ")
-    imagePath =  await service.getPreviewImageByidBook(idBook)
-    if not os.path.exists(imagePath):
-        raise HTTPException(status_code=404, detail="Image not found")
-    return FileResponse(imagePath) 
 
 
 @BookController.get("/filter")
@@ -39,8 +32,34 @@ async def filter(request:Request,param:str,value:int):
         raise HTTPException(status_code=400, detail=f"Error al filtrar el libro [{e}]")
 
 
+@BookController.get("/getImagePreview")
+async def getImagePreview(request:Request,idBook:int):
+    logs.info(f"call {request.client.host} ->  getImagePreview({id}) ")
+    imagePath =  await service.getPreviewImageByidBook(idBook)
+    if not os.path.exists(imagePath):
+        raise HTTPException(status_code=404, detail="Image not found")
+    return FileResponse(imagePath)
+ 
+
+@BookController.get("/download")
+async def download(request:Request,idBook:int,idUser:int):
+    try:
+        logs.info(f"call {request.client.host} ->  download({idBook},{idUser})")
+        media= await service.getPdfFile(idBook)
+        path=media.path
+        if not os.path.exists(path):
+             raise HTTPException(status_code=404, detail="PDF no encontrado") 
+        return FileResponse(path, media_type="application/pdf", filename=f"{media.name}{media.ext}")
+    
+    except ExeptionDAO as e:
+         raise HTTPException(status_code=400, detail=f"Error al obtener el PDF [{e}]")
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=f"Error inesperado al obtener el PDF [{e}]")
+
+
 @BookController.post("/createBook")
-async def createBook(editorial:int,autor:int,title:str,category:int,category_base:int,userUpload:int,request:Request,pdf_file: UploadFile = File(...), ): #):  # Recibiendo el archivo PDF
+async def createBook(editorial:int,autor:int,title:str,category:int,category_base:int,
+                     userUpload:int,request:Request,pdf_file: UploadFile = File(...), ): 
 
     res:BookEntity = None
     logs.info(f"call {request.client.host} ->  createBook({title}) ")
