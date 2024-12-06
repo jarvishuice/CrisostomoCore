@@ -5,7 +5,8 @@ import logging
 
 class Logs:
     """
-    Clase Singleton para gestionar los logs de la aplicación, leyendo la configuración desde un archivo .conf.
+    Clase Singleton para gestionar los logs de la aplicación, 
+    leyendo la configuración desde un archivo .conf.
 
     Attributes:
         __instance: Instancia única de la clase.
