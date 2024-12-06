@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from API.Controllers.UserController import UserController
 from API.Controllers.AuthorController import AuthorController
 from API.Controllers.EditorialController import EditorialController
@@ -15,9 +17,16 @@ app.title = "CRISOSTO API"
 app.version = "1.0.0"
 log.info("init core")
 log.info("starting server")
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permitir todas las IPs
+    allow_credentials=True,
+    allow_methods=["*"],  # Permitir todos los métodos
+    allow_headers=["*"],  # Permitir todos los encabezados
+)
 log.info(f"build map Controllers")
-
-
 # mapeo de controladores
 #=====================================================
 
