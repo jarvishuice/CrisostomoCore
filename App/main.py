@@ -6,6 +6,7 @@ from API.Controllers.AuthorController import AuthorController
 from API.Controllers.EditorialController import EditorialController
 from API.Controllers.CategroyController import CategoryController
 from API.Controllers.BookController import BookController
+from API.Controllers.RenderConfigController import RenderConfigController
 from Domain.GlobalValues import GlobalValues
 from Domain.Room.Logs import Logs
 import uvicorn
@@ -35,6 +36,7 @@ app.include_router(AuthorController, prefix="/API",)
 app.include_router(EditorialController, prefix="/API",)
 app.include_router(CategoryController, prefix="/API",)
 app.include_router(BookController,prefix="/API")
+app.include_router(RenderConfigController,prefix="/API")
 #=====================================================
 
 log.info(f" builder controller Complete") 
