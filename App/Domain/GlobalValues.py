@@ -21,6 +21,7 @@ class GlobalValues:
             path = "C:\\CrisostomoCore\\Logs\\"
         else:
             path = "/opt/CrisostomoCore/Logs/"
+        print(F" VALIDACION OS {os.name}")
 
         return path
     @property
@@ -60,5 +61,6 @@ class GlobalValues:
             path = "C:\\CrisostomoCore\\Media\\Books"
         else:
             path = "/opt/CrisostomoCore/Media/Books"
+        print(F" VALIDACION OS {os.name}")
         return path
 

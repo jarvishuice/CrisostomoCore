@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from API.Controllers.UserController import UserController
 from API.Controllers.AuthorController import AuthorController
 from API.Controllers.EditorialController import EditorialController
