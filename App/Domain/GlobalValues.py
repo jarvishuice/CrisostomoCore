@@ -32,7 +32,7 @@ class GlobalValues:
 
     @property
     def getIPServer(self):
-        return "localhost"
+        return "127.0.0.1"
     @property
     def getPortServer(self)-> int:
         return 8091

@@ -2,6 +2,7 @@ from Domain.GlobalValues import GlobalValues
 import datetime
 import logging
 
+from colorama import Fore, Style
 
 class Logs:
     """
@@ -33,22 +34,22 @@ class Logs:
         """
         Logea un mensaje a nivel INFO.
         """
-        self.logger.info(message)
+        self.logger.info(f"{Fore.GREEN}{message}{Style.RESET_ALL}")
 
     def debug(self, message):
         """
         Logea un mensaje a nivel DEBUG.
         """
-        self.logger.debug(message)
+        self.logger.debug(f"{Fore.MAGENTA}{message}{Style.RESET_ALL}")
 
     def warning(self, message):
         """
         Logea un mensaje a nivel WARNING.
         """
-        self.logger.warning(message)
+        self.logger.warning(f"{Fore.YELLOW}{message}{Style.RESET_ALL}")
 
     def error(self, message):
         """
         Logea un mensaje a nivel ERROR.
         """
-        self.logger.error(message)
+        self.logger.error(f"{Fore.RED}{message}{Style.RESET_ALL}")

@@ -44,3 +44,12 @@ async def create(request: Request,author:AuthorEntity):
         return  await service.createAuthor(author)
     except ExeptionDAO as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+    
+@AuthorController.put("/update")
+async def update(request: Request,author:AuthorEntity):
+    try:
+        logs.info(f"call {request.client.host} ->  update({author.id}) ")
+        return await service.update(author)
+    except ExeptionDAO as e:
+        raise HTTPException(status_code=400, detail=str(e))
