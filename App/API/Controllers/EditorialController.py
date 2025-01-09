@@ -16,10 +16,19 @@ service: EditorialService = EditorialService(dao)
 async def getAll(request: Request):
     try:
         logs.info(f"call {request.client.host} ->  getAll() ")
-        return  await service.getAllEditorials
+        return  await service.getAllEditorials(0)
     except ExeptionDAO as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
 
+@EditorialController.get("/allWithUser", response_model=list[EditorialEntity])
+async def allWithUser(request: Request,idUser:int):
+    try:
+        logs.info(f"call {request.client.host} ->  allWithUser({idUser}) ")
+        return  await service.getAllEditorials(idUser)
+    except ExeptionDAO as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
 
 @EditorialController.get("/byId")
 async def getById(request:Request, id:int):
@@ -31,10 +40,10 @@ async def getById(request:Request, id:int):
 
 
 @EditorialController.get("/search")
-async def search(request:Request, param:str):
+async def search(request:Request, param:str,userId:int):
     try:
-        logs.info(f"call {request.client.host} ->  search({param}) ")
-        return  await service.search(param)
+        logs.info(f"call {request.client.host} ->  search({param},{userId}) ")
+        return  await service.search(param,userId)
     except ExeptionDAO as e:
         raise HTTPException(status_code=400, detail=str(e))
     

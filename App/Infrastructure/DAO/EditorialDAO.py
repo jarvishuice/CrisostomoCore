@@ -17,7 +17,7 @@ class EditorialDAO(IEditorialRepository):
     def getEditorials(self) -> list[EditorialEntity]:
         res = []
         conn = self.__db.get_connection()
-        query = "select * from editorial"
+        query = "select * from editorial order by id asc"
         try:
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 cur.execute(query)
