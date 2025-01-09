@@ -25,7 +25,7 @@ class AuthorDAO(IAuthorRepository):
                                             name=row["name"],
                                             description = row["description"],
                                            ))
-                self.__log.info(f"read all Authors ->[OK] ->[{res.__len__()}] authors")
+                self.__log.info(f"read all Authors ->[OK] ->[{len(res)}] authors")
         except DatabaseError as e :
             self.__log.error(f"Error de operacion en la base de datos en la base de datos ->{e} ")
             raise ExeptionDAO(GlobalValues().getMsgDbError)
@@ -83,7 +83,7 @@ class AuthorDAO(IAuthorRepository):
                                                 name = row["name"],
                                                 description = row["description"]
                                                 ))
-                    self.__log.info(f"search  Author #{param} ->[OK] ->[{res.__len__()}] Authors ")
+                    self.__log.info(f"search  Author #{param} ->[OK] ->[{len(res)}] Authors ")
                 else:
                     self.__log.info(f"search  Author #{param} ->[Not Found]")    
         except DatabaseError as e :

@@ -30,7 +30,7 @@ class CategoryDAO(ICategoryRepository):
                                                parentID=row["parent_id"],
                                               ))
                 self.__log.info(f"read all BaseCategory ->"+
-                                f"[OK] ->[{res.__len__()}] category")
+                                f"[OK] ->[{len(res)}] category")
                 
         except DatabaseError as e :
             self.__log.error(f"Error de operacion en la base"+ 
@@ -59,7 +59,7 @@ class CategoryDAO(ICategoryRepository):
                                                parentID=row["parent_id"],
                                               ))
                 self.__log.info(f"read all category by parentId({parentId}) ->"+
-                                f"[OK] ->[{res.__len__()}] category")
+                                f"[OK] ->[{len(res)}] category")
                 
         except DatabaseError as e :
             self.__log.error(f"Error de operacion en la base"+ 

@@ -37,7 +37,7 @@ class BookDAO(IBookRepository):
           
                                               ))
                 self.__log.info(f"read all Books ->"+
-                                f"[OK] ->[{res.__len__()}] books")
+                                f"[OK] ->[{len(res)}] books")
                 
         except DatabaseError as e :
             self.__log.error(f"Error de operacion en la base"+ 
@@ -109,7 +109,7 @@ class BookDAO(IBookRepository):
           
                                               )
                 self.__log.info(f"search  Book ->{param} ->"+
-                                f"[OK] ->[{res.__len__()}] books")
+                                f"[OK] ->[{len(res)}] books")
                 
         except DatabaseError as e :
             self.__log.error(f"Error de operacion en la base"+ 
@@ -194,7 +194,7 @@ class BookDAO(IBookRepository):
                                       code = row["code"],
                                               ))
                 self.__log.info(f"search  Book ->{param} ->"+
-                                f"[OK] ->[{res.__len__()}] books")
+                                f"[OK] ->[{len(res)}] books")
                 
         except DatabaseError as e :
             self.__log.error(f"Error de operacion en la base"+ 

@@ -5,15 +5,16 @@ from Domain.Entity.EditorialEntity import EditorialEntity
 from Domain.Exeptions.ExecptionDAO import ExeptionDAO
 from Domain.GlobalValues import GlobalValues
 from psycopg2.extras import RealDictCursor
-from psycopg2 import IntegrityError,DatabaseError
+from psycopg2 import IntegrityError, DatabaseError
+
+
 class EditorialDAO(IEditorialRepository):
     def __init__(self):
         self.__log = Logs(__name__)
-        self.__db:PsqlProvider = PsqlProvider.get_instance(100)
-    
+        self.__db: PsqlProvider = PsqlProvider.get_instance(100)
 
     @property
-    def getEditorials(self) -> list[EditorialEntity] :
+    def getEditorials(self) -> list[EditorialEntity]:
         res = []
         conn = self.__db.get_connection()
         query = "select * from editorial"
@@ -24,79 +25,79 @@ class EditorialDAO(IEditorialRepository):
                 for row in rows:
                     res.append(EditorialEntity(id=row["id"],
                                                name=row["name"]
-                                              ))
-                self.__log.info(f"read all Editorials ->"+
-                                "[OK] ->[{res.__len__()}] editorials")
-                
-        except DatabaseError as e :
-            self.__log.error(f"Error de operacion en la base"+ 
+                                               ))
+                self.__log.info(f"read all Editorials ->" +
+                                f"[OK] ->[{len(res)}] editorials")
+
+        except DatabaseError as e:
+            self.__log.error(f"Error de operacion en la base" +
                              f"de datos en la base de datos ->{e} ")
             raise ExeptionDAO(GlobalValues().getMsgDbError)
         except Exception as e:
             self.__log.error(e)
             raise ExeptionDAO(e)
         finally:
-            self.__db.return_connection(conn)   
+            self.__db.return_connection(conn)
 
-        return res  
+        return res
 
 
-    def getEditorialById(self,id:int) -> EditorialEntity:
-        res :EditorialEntity= None
+    def getEditorialById(self, id: int) -> EditorialEntity:
+        res: EditorialEntity = None
         conn = self.__db.get_connection()
-        query= "select * from editorial where id = %s"
+        query = "select * from editorial where id = %s"
         try:
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                cur.execute(query,(id,))
+                cur.execute(query, (id,))
                 rows = cur.fetchall()
                 if len(rows) > 0:
 
                     for row in rows:
-                        res=EditorialEntity(id=row["id"],
-                                        name=row["name"],
-                                    )
-                    self.__log.info(f"read  Editorial #{id} ->"+
+                        res = EditorialEntity(id=row["id"],
+                                              name=row["name"],
+                                              )
+                    self.__log.info(f"read  Editorial #{id} ->" +
                                     f"[OK] ->[{res.name}] ")
                 else:
-                    self.__log.info(f"read  Editorial #{id} ->"+
-                                    "[Not Found]")    
-        except DatabaseError as e :
-            self.__log.error("Error de operacion en la base "+
+                    self.__log.info(f"read  Editorial #{id} ->" +
+                                    "[Not Found]")
+        except DatabaseError as e:
+            self.__log.error("Error de operacion en la base " +
                              f"de datos en la base de datos ->{e} ")
             raise ExeptionDAO(GlobalValues().getMsgDbError)
         except Exception as e:
             self.__log.error(e)
             raise ExeptionDAO(e)
         finally:
-            self.__db.return_connection(conn)   
+            self.__db.return_connection(conn)
 
-        return res  
-    
+        return res
 
-    def searchEditorial(self,param:str)->list[EditorialEntity]:
+
+    def searchEditorial(self, param: str) -> list[EditorialEntity]:
         res = []
         conn = self.__db.get_connection()
-        query= "select * from editorial where name like  %s ;"
+        query = "select * from editorial where name like  %s ;"
         try:
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                cur.execute(query,(f"%{param}%",))
+                cur.execute(query, (f"%{param}%",))
                 rows = cur.fetchall()
                 if len(rows) > 0:
 
                     for row in rows:
                         res.append(EditorialEntity(
-                                                    id=row["id"],
-                                                    name=row["name"],
-                                                  )
-                                )
-                    self.__log.info(f"search  Editorial #{param} ->[OK] ->"+
-                                    f"[{res.__len__()}] Editorial ")
+                            id=row["id"],
+                            name=row["name"],
+                        )
+                        )
+                    self.__log.info(f"search  Editorial #{param} ->[OK] ->" +
+                                    f"[{len(res)}] Editorial ")
                 else:
-                    self.__log.info(f"search  Editorial #{param} ->"+
-                                     "[Not Found]")    
-        except DatabaseError as e :
-            self.__log.error(f"Error de operacion en la base de datos en"+ 
-                               "la base de datos ->{e} ")
+                    self.__log.info(f"search  Editorial #{param} ->" +
+                                    "[Not Found]")
+        except DatabaseError as e:
+            self.__log.error(f"Error de operacion en la base de datos en" +
+                             "la base de datos ->{e} ")
             raise ExeptionDAO(GlobalValues().getMsgDbError)
         except Exception as e:
             self.__log.error(e)
@@ -104,9 +105,9 @@ class EditorialDAO(IEditorialRepository):
         finally:
             self.__db.return_connection(conn)
         return res
-    
 
-    def addEditorial(self, editorial: EditorialEntity) -> int : 
+
+    def addEditorial(self, editorial: EditorialEntity) -> int:
         new_id = None
         conn = self.__db.get_connection()
         try:
@@ -117,20 +118,20 @@ class EditorialDAO(IEditorialRepository):
                     RETURNING id
                  """
                 cur.execute(query, (
-                editorial.name.upper(),
+                    editorial.name.upper(),
                 ))
-        
+
                 new_id = cur.fetchone()['id']
-                conn.commit() 
-                self.__log.info(f"add editorial -> [OK] ->"+
+                conn.commit()
+                self.__log.info(f"add editorial -> [OK] ->" +
                                 f"#[{new_id}]")
             return new_id
-            
-        except IntegrityError as e :
+
+        except IntegrityError as e:
             self.__log.error(f"""Error de integridad en la base de
                                datos ->{e} """)
             raise ExeptionDAO(GlobalValues().getMsgDbIntErrors)
-        except DatabaseError as e :
+        except DatabaseError as e:
             self.__log.error(f"""Error de operacion en la base de
                               datos en la base de datos ->{e} """)
             raise ExeptionDAO(GlobalValues().getMsgDbError)
@@ -139,4 +140,3 @@ class EditorialDAO(IEditorialRepository):
             raise ExeptionDAO(e)
         finally:
             self.__db.return_connection(conn)
-    
