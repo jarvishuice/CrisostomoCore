@@ -32,6 +32,7 @@ class AuthorService:
         except ExeptionDAO as e :
             raise   
 
+
     async def getAuthorById(self, id) -> AuthorEntity:
         res:AuthorEntity= None
         try:
