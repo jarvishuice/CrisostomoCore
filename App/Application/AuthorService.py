@@ -1,21 +1,34 @@
+from Domain.Entity.FavoriteTraceEntity import FavoriteTraceEntity
+from Domain.Room.Logs import Logs
+from Infrastructure.DAO.AuthorTraceFavoriteDAO import AuthorTraceFavoriteDAO
 from Domain.Repository import IAuthorRepository
 from Domain.Entity.AuthorEntity import AuthorEntity
-from Domain.Entity.loginEntity import LoginEntity
 from Domain.Exeptions.ExecptionDAO import ExeptionDAO
-from Domain.Room.Cipher import Cipher
-from Domain.Entity.UserEntity import UserEntity
-from Domain.Repository import IUserRepository
+
+
 
 class AuthorService:
     def __init__(self,repository:IAuthorRepository):
         self.repository = repository
-    
-    @property
-    async  def getAllAutors(self) -> list[AuthorEntity]:
+        self.traceRepository = AuthorTraceFavoriteDAO()
+        self.__log = Logs(__name__)
+
+
+    async  def getAllAutors(self,idUser:int=0 ) -> list[AuthorEntity]:
         res = []
         try:
-            res = self.repository.getAuthors
-            return res
+            authors:list[AuthorEntity] = self.repository.getAuthors
+            trace= self.traceRepository.getFavoriteByUserId(idUser)
+            if idUser==0:
+                res = authors
+                return res
+            for i in authors:
+                value = list(filter(lambda e: e.idElement == i.id,trace ))
+                if len(value) > 0:
+                    i.trace = value[0]
+                    self.__log.info(f"add trace the author #{i.id}")    
+                res.append(i) 
+            return res           
         except ExeptionDAO as e :
             raise   
 
@@ -38,11 +51,22 @@ class AuthorService:
             raise 
 
 
-    async def search(self,param:str)-> list[AuthorEntity]:
+    async def search(self,param:str,idUser:int=0)-> list[AuthorEntity]:
         res=[]
         try:
-            res =  self.repository.searchAuthor(param.upper())
-            return res
+            authors =  self.repository.searchAuthor(param.upper())
+            trace= self.traceRepository.getFavoriteByUserId(idUser)
+
+            if idUser==0:
+                res = authors
+                return res
+            for i in authors:
+                value = list(filter(lambda e: e.idElement == i.id,trace ))
+                if len(value) > 0:
+                    i.trace = value[0]
+                    self.__log.info(f"add trace the author #{i.id}")    
+                res.append(i) 
+            return res           
         except ExeptionDAO as e :
             raise 
 
@@ -55,3 +79,51 @@ class AuthorService:
             return res
         except ExeptionDAO as e:
             raise
+
+    
+    async def tapFavorite(self,idUser:int,element:int)->bool:
+        res = False
+        trace:FavoriteTraceEntity = FavoriteTraceEntity()
+        traceRes:FavoriteTraceEntity = FavoriteTraceEntity()
+        try:
+            check = self.traceRepository.checkFavorite(idUser,element)
+            self.__log.info(f"check favorite author #{element}"+ 
+                               f"by user #{idUser} ->[{check}]")
+            if check:
+                trace  = self.traceRepository.traceByItemAndUser(idUser,element)
+                self.traceRepository.deleteTraceFavorite(trace)
+                res = True
+                return res
+            else:
+                trace.id = -1
+                trace.idUser = idUser
+                trace.idElement = element
+                trace.dateOperation = "vacio se llena solo"
+                traceRes = self.traceRepository.createTraceFavorite(trace)
+                if traceRes.id > 0:
+                    res= True
+            return res
+        
+        except ExeptionDAO as e :
+            raise
+    
+
+    async def getAuthorFavoriteByUser(self,idUser:int)-> list[AuthorEntity] :
+        res=[]
+        try:
+           
+            trace = self.traceRepository.getFavoriteByUserId(idUser)
+            editorials =  self.repository.getAuthorFavorite(idUser)
+            for i in editorials:
+                value = list(filter(lambda e: e.idElement == i.id,trace))
+              
+                if len(value) > 0:
+                    i.trace = value[0]
+                    self.__log.info(f"add trace the editorial #{i.id}")
+                res.append(i)
+            return res
+        except ExeptionDAO as e :
+            raise
+
+
+    

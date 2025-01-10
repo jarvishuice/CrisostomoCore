@@ -164,4 +164,38 @@ class AuthorDAO(IAuthorRepository):
             raise ExeptionDAO(e)
         finally:
             self.__db.return_connection(conn)
-        
+
+    
+    def getAuthorFavorite(self,idUser:int)->list[AuthorEntity] :
+        res = []
+        conn = self.__db.get_connection()
+        query = """ select * from  author e  
+                    where e.id in 
+                    (select dt.id_author from author_favorite_trace dt  
+                     where dt.id_user = %s )
+                    order by e."name"  asc"""
+        try:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute(query,(idUser,))
+                rows = cur.fetchall()
+                for row in rows:
+                    res.append(AuthorEntity(id=row["id"],
+                                            name=row["name"],
+                                            description=row["description"],                           
+                                            )
+                              )
+                    
+                self.__log.info(f"read all Editorials favorite user #{idUser} ->" +
+                                f"[OK] ->[{len(res)}] editorials")
+
+        except DatabaseError as e:
+            self.__log.error(f"Error de operacion en la base" +
+                             f"de datos en la base de datos ->{e} ")
+            raise ExeptionDAO(GlobalValues().getMsgDbError)
+        except Exception as e:
+            self.__log.error(e)
+            raise ExeptionDAO(e)
+        finally:
+            self.__db.return_connection(conn)
+
+        return res
