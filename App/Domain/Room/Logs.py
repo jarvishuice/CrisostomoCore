@@ -26,7 +26,7 @@ class Logs:
             level="INFO",
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         )
-        print(f"path:-> {str(GlobalValues().getPathLogs)}Logs{datetime.date.today()}.log")
+        #print(f"path:-> {str(GlobalValues().getPathLogs)}Logs{datetime.date.today()}.log")
 
         self.logger = logging.getLogger(name)
 

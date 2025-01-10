@@ -17,8 +17,12 @@ app.title = "CRISOSTO API"
 app.version = "1.0.0"
 log.info("init core")
 log.info("starting server")
+log.info("check paths app ")
+log.info(f"path Logs [OK]:-> {str(GlobalValues().getPathLogs)}")
+log.info(f"path book storage [OK]:-> {str(GlobalValues().PathBooks)}")
+log.info("end check paths")
 
-
+log.warning("init config Middleware")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Permitir todas las IPs
@@ -26,6 +30,7 @@ app.add_middleware(
     allow_methods=["*"],  # Permitir todos los métodos
     allow_headers=["*"],  # Permitir todos los encabezados
 )
+log.warning("Middleware config end -> [OK]")
 log.info(f"build map Controllers")
 # mapeo de controladores
 #=====================================================
