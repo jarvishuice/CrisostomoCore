@@ -126,9 +126,9 @@ class EditorialTraceFavoriteDAO(IFavoriteTraceRepository):
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 query = """
                    INSERT INTO public.editorial_favorite_trace
-                   (id_user, id_category, date_trace) 
-                   VALUES(%s, %s, now());
-                    RETURNING id
+                   (id_user, id_editorial, date_trace) 
+                   VALUES(%s, %s, now())
+                    RETURNING id;
                  """
                 cur.execute(query, (
                 trace.idUser,
@@ -184,3 +184,39 @@ class EditorialTraceFavoriteDAO(IFavoriteTraceRepository):
             raise ExeptionDAO(e)
         finally:
             self.__db.return_connection(conn)
+
+    
+    def traceByItemAndUser(self,idUser:int,element:int)-> FavoriteTraceEntity:
+        res:FavoriteTraceEntity = FavoriteTraceEntity() 
+        conn = self.__db.get_connection()
+        query = """
+                   SELECT id, id_user, id_editorial, date_trace
+                   FROM public.editorial_favorite_trace WHERE 
+                   id_user = %s and id_editorial = %s;
+                """
+
+        try:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute(query, (idUser,element,))
+                rows = cur.fetchall()
+
+                for row in rows:
+                   res = FavoriteTraceEntity(id=row["id"],
+                                                   idUser=row["id_user"],
+                                                   idElement=row["id_editorial"],
+                                                   dateOperation=str(row["date_trace"])
+                                                   )
+                self.__log.info(f"read trace editorial by user #{idUser} and editorial #{element} ->" +
+                                f"[OK] ->[{res.dateOperation}] date trace")
+
+        except DatabaseError as e:
+            self.__log.error(f"Error de operacion en la base" +
+                             f"de datos en la base de datos ->{e} ")
+            raise ExeptionDAO(GlobalValues().getMsgDbError)
+        except Exception as e:
+            self.__log.error(e)
+            raise ExeptionDAO(e)
+        finally:
+            self.__db.return_connection(conn)
+
+        return res

@@ -18,3 +18,7 @@ class IEditorialRepository(ABC):
     @abstractmethod
     def addEditorial(self, editorial: EditorialEntity) -> int:
         ...
+
+    @abstractmethod
+    def getEditorialsFavorite(idUser:int)->list[EditorialEntity] :
+        ...

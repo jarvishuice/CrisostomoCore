@@ -46,6 +46,24 @@ async def search(request:Request, param:str,userId:int):
         return  await service.search(param,userId)
     except ExeptionDAO as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@EditorialController.get("/tapFavorite")
+async def TapFavorite(request:Request,idUser:int,element:int):
+    try:
+        logs.info(f"call {request.client.host} ->  TapFavorite({idUser},{element}) ")
+        return  await service.tapFavorite(idUser,element)
+    except ExeptionDAO as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@EditorialController.get("/favorites")
+async def favoriteByUser(request:Request,idUser:int):
+    try:
+        logs.info(f"call {request.client.host} ->  favoriteByUser({idUser}) ")
+        return  await service.getEditorialFavoriteByUser(idUser)
+    except ExeptionDAO as e:
+        raise HTTPException(status_code=400, detail=str(e))
     
 
 @EditorialController.post("/create")
@@ -55,3 +73,5 @@ async def createEditorial(request:Request,editorial:EditorialEntity):
         return  await service.createEditorial(editorial)
     except ExeptionDAO as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+    

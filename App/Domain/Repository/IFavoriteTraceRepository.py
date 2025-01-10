@@ -84,7 +84,6 @@ class IFavoriteTraceRepository(ABC):
         ...
 
     
-    
     @abstractmethod
     def deleteTraceFavorite(trace: FavoriteTraceEntity) -> bool:
         """
@@ -96,5 +95,20 @@ class IFavoriteTraceRepository(ABC):
         Retorna:
             bool: True si la eliminación fue exitosa, 
             False en caso contrario.
+        """
+        ...
+
+
+    @abstractmethod
+    def traceByItemAndUser(idUser:int,element:int)-> FavoriteTraceEntity:
+        """
+        Recupera la traza de favorito asociada a un usuario específico y un elemento.
+
+        Parámetros:
+            idUser (int): El identificador del usuario.
+            element (int): El identificador del elemento para el cual se desea obtener la traza.
+
+        Retorna:
+            FavoriteTraceEntity: La traza de favorito asociada al usuario y al elemento especificado.
         """
         ...
