@@ -4,6 +4,7 @@ project(Domain)
 # Crea la biblioteca compartida 'domain'. 
 # Los archivos .hpp no necesitan estar aquí, solo los .cpp
 add_library(domain SHARED 
+    Kernel/ConfigReaderHelper.cpp
     Validators/ValidatorsT.cpp
 )
 

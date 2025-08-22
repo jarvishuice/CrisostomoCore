@@ -1,4 +1,4 @@
-#include<Kernel/ConfigValues.hpp>
+#include"Domain/Kernel/ConfigValues.hpp"
 int main() {
     // Inicializar la configuración
     Domain::Kernel::ConfigValues::start();
