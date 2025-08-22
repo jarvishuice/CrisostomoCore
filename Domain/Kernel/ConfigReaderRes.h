@@ -8,7 +8,9 @@ int main() {
     if (rc < 0) {
         std::cerr << "No se pudo abrir config.ini\n";
         return 1;
+   
     }
+
 
     // Leer valores
     const char* dbHost = ini.GetValue("database", "host",     "localhost");

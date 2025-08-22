@@ -1,14 +1,17 @@
-# Crea la biblioteca compartida 'domain' a partir de los archivos de la capa
+cmake_minimum_required(VERSION 3.10)
+project(Domain)
+
+# Crea la biblioteca compartida 'domain'. 
+# Los archivos .hpp no necesitan estar aquí, solo los .cpp
 add_library(domain SHARED 
-    Entities/EntityBase.hpp
-    Entities/UserEntity.hpp
-    # Agrega otros archivos de la capa de dominio aquí
+    Validators/ValidatorsT.cpp
 )
 
-# Asegura que otros módulos puedan encontrar los archivos de encabezado
-target_include_directories(domain PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Enitities)
-
-# Añade una propiedad para que los otros CMakeLists.txt la puedan encontrar
-set_target_properties(domain PROPERTIES PUBLIC_HEADER
-    Enitities/EntityBase.hpp
+# Establece los directorios de inclusión para las otras capas.
+# Se deben incluir los subdirectorios que contienen los archivos .h/.hpp
+target_include_directories(domain PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Entities
+    ${CMAKE_CURRENT_SOURCE_DIR}/IDAO
+    ${CMAKE_CURRENT_SOURCE_DIR}/Kernel
+    ${CMAKE_CURRENT_SOURCE_DIR}/Validators
 )
