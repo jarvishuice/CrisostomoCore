@@ -7,7 +7,6 @@ int main() {
     SI_Error rc = ini.LoadFile("config.ini");
     if (rc < 0) {
         std::cerr << "No se pudo abrir config.ini\n";
-        
         return 1;
    
     }
